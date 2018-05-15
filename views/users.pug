@@ -12,11 +12,11 @@ html
                 th Age
             each user in users
                  tr
+                     td #{user._id}
                      td #{user.userId}
                      td #{user.name}
                      td #{user.email}
                      td #{user.age}
-                     td
                         a(href=`/edit/` + user.id) edit
                      td
                         a(href='/delete/' + user.id) delete
