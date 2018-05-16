@@ -39,10 +39,9 @@ db.once('open', function() {
     // get root page, render index which contains form
     app.get('/', (req, res) => {
         res.render('index');
-        //check users add user button. need to reconnect to client here on button press
     });
 
-    //post request pushes form data to array
+    //post request posts form data to db
     app.post('/users', (req, res) => {
         let person = new user({
             userId: req.body.userId,
@@ -50,6 +49,7 @@ db.once('open', function() {
             email: req.body.email,
             age: req.body.age
         });
+        //save person to db collection user
         person.save(function (err, person) {
             if (err) return console.log(err);
             console.log(person);
@@ -60,12 +60,9 @@ db.once('open', function() {
                 console.log(people);
             });
         });
-        //userArr.push(user);
-
-        // Not using userArr anymore, will need to render the document. ??
-
     });
 
+    // get the user page
     app.get('/users', (req, res) => {
         user.find({}, (err, people) => {
             if (err) console.log(err);
@@ -107,7 +104,6 @@ db.once('open', function() {
     app.get('/delete/:_id', (req, res) => {
         user.remove({_id: req.params._id}, (err) => {
             if (err) return console.log(err);
-
 
             res.redirect('/users');
         });
