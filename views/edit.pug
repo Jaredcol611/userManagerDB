@@ -3,7 +3,7 @@ html
     head
         title Edit
     body
-        form(method='POST', action='/edit')
+        form(method='POST', action=`/edit/` + user._id)
             div
                 label(for='userId') User ID
                 input(id='userId', name='userId' value= user.userId)

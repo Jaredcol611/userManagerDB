@@ -12,14 +12,15 @@ html
                 th Age
             each user in users
                  tr
-                     td #{user._id}
+                     //td #{user._id}
                      td #{user.userId}
                      td #{user.name}
                      td #{user.email}
                      td #{user.age}
-                        a(href=`/edit/` + user.id) edit
                      td
-                        a(href='/delete/' + user.id) delete
+                        a(href=`/edit/` + user._id) edit
+                     td
+                        a(href='/delete/' + user._id) delete
 
         form(action='/', method='get')
             button Add New User
