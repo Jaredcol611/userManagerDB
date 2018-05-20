@@ -38,6 +38,15 @@ db.once('open', function() {
 
     // get root page, render index which contains form
     app.get('/', (req, res) => {
+
+        user.find({}, (err, people) => {
+            if (err) return console.log(err);
+            res.render('users', {users: people});
+            console.log(people);
+        });
+    });
+
+    app.get('/add', (req, res) => {
         res.render('index');
     });
 
@@ -108,13 +117,38 @@ db.once('open', function() {
             res.redirect('/users');
         });
     });
+
+
+    //all sort /get requests below
+    app.get('/sortId', (req, res) => {
+        user.find({}).sort( { userId: -1 } );
+        // user.sort((a, b) => {
+            // if(a.userId < b.userId){return -1}
+            // else if(a.name > b.name){return 1}
+            // else return 0;
+        res.redirect('users');
+    });
+    app.get('/sortName', (req, res) => {
+        user.sort({}).sort( { name: -1 } );
+        res.redirect('users');
+    });
+    app.get('/sortEmail', (req, res) => {
+        user.sort({}).sort( { email: -1} );
+        res.redirect('users');
+    });
+    app.get('/sortAge', (req,res) => {
+        user.sort({}).sort( { age: -1 } );
+        res.redirect('users');
+    });
+
+
     //port for server
     app.listen(3000, () => {
         console.log('listening on port 3000')
     });
 });
 
-
+//data dump
 
 
 

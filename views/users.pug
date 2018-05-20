@@ -6,10 +6,14 @@ html
 
         table User List
             tr
-                th User Id
-                th Name
-                th Email
-                th Age
+                th
+                    a(href=`/sortId`) User Id
+                th
+                    a(href=`/sortName`) Name
+                th
+                    a(href=`/sortEmail`) Email
+                th
+                    a(href=`/sortAge`) Age
             each user in users
                  tr
                      //td #{user._id}
@@ -22,6 +26,6 @@ html
                      td
                         a(href='/delete/' + user._id) delete
 
-        form(action='/', method='get')
+        form(action='/add', method='get')
             button Add New User
 //  input(type='submit', value='Delete', onClick='deleteThis(#{val})')   make this a link
