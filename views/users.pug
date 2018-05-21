@@ -28,4 +28,11 @@ html
 
         form(action='/add', method='get')
             button Add New User
+
+        form(action='/search', method='post')
+            input(type='text', name="search")
+            button Search
+
+        form(action='/list', method='get')
+            button Full List
 //  input(type='submit', value='Delete', onClick='deleteThis(#{val})')   make this a link

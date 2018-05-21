@@ -3,10 +3,10 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
-const url = 'mongodb://localhost:27017';
-const dbName = 'testProject';
+// const url = 'mongodb://localhost:27017';
+// const dbName = 'testProject';
 const app = express();
-let userArr = [];
+// let userArr = [];
 
 // use and set code
 
@@ -15,8 +15,10 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.set('views',  path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-
-
+let sortId = true;
+let sortName = true;
+let sortEmail = true;
+let sortAge = true;
 
 //Mongoose beginning
 
@@ -36,7 +38,7 @@ db.once('open', function() {
     let user = mongoose.model('user', mySchema);
     // express code ----------------------------------------------------------------------------
 
-    // get root page, render index which contains form
+    // get root page, render index which now displays the users table
     app.get('/', (req, res) => {
 
         user.find({}, (err, people) => {
@@ -46,11 +48,12 @@ db.once('open', function() {
         });
     });
 
+    //when hitting the add new user button from users table
     app.get('/add', (req, res) => {
         res.render('index');
     });
 
-    //post request posts form data to db
+    // posts form data to db
     app.post('/users', (req, res) => {
         let person = new user({
             userId: req.body.userId,
@@ -62,7 +65,7 @@ db.once('open', function() {
         person.save(function (err, person) {
             if (err) return console.log(err);
             console.log(person);
-
+            //find the new collection and display it on users table
             user.find({}, (err, people) => {
                 if (err) return console.log(err);
                 res.render('users', {users: people});
@@ -71,7 +74,7 @@ db.once('open', function() {
         });
     });
 
-    // get the user page
+    // get the users table page
     app.get('/users', (req, res) => {
         user.find({}, (err, people) => {
             if (err) console.log(err);
@@ -82,7 +85,6 @@ db.once('open', function() {
 
     //edit page grabs id from user to render on a new form
     app.get('/edit/:_id', (req, res) => {
-
         user.findById(req.params._id, (err, person) => {
             if (err) console.log(err);
             res.render('edit', {user: person})
@@ -91,11 +93,8 @@ db.once('open', function() {
 
     // edit page form passing in new, edited information
     app.post('/edit/:_id', (req, res) => {
-
         user.update({_id: req.params._id},
-
-            {
-                $set:
+            {$set:
                     {
                         userId: req.body.userId,
                         name: req.body.name,
@@ -120,27 +119,83 @@ db.once('open', function() {
 
 
     //all sort /get requests below
+    //Sort Id
     app.get('/sortId', (req, res) => {
-        user.find({}).sort( { userId: -1 } );
-        // user.sort((a, b) => {
-            // if(a.userId < b.userId){return -1}
-            // else if(a.name > b.name){return 1}
-            // else return 0;
-        res.redirect('users');
+        sortId ?
+            user.find({}).sort('-userId').exec((err, users) => {
+                if (err) console.log(err);
+                res.render('users', {users: users});
+                sortId = false;
+            })
+            :
+            user.find({}).sort('userId').exec((err, users) => {
+                if (err) console.log(err);
+                res.render('users', {users: users});
+                sortId = true;
+            });
     });
+    //Sort Name
     app.get('/sortName', (req, res) => {
-        user.sort({}).sort( { name: -1 } );
-        res.redirect('users');
+        sortName ?
+            user.find({}).sort('-name').exec((err, users) => {
+                if (err) console.log(err);
+                res.render('users', {users: users});
+                sortName = false;
+            })
+            :
+            user.find({}).sort('name').exec((err, users) => {
+                if (err) console.log(err);
+                res.render('users', {users: users});
+                sortName = true;
+            });
     });
+    //Sort Email
     app.get('/sortEmail', (req, res) => {
-        user.sort({}).sort( { email: -1} );
-        res.redirect('users');
+        sortEmail ?
+            user.find({}).sort('-email').exec((err, users) => {
+                if (err) console.log(err);
+                res.render('users', {users: users});
+                sortEmail = false;
+            })
+            :
+            user.find({}).sort('email').exec((err, users) => {
+                if (err) console.log(err);
+                res.render('users', {users: users});
+                sortEmail = true;
+            });
     });
+    //Sort Age
     app.get('/sortAge', (req,res) => {
-        user.sort({}).sort( { age: -1 } );
-        res.redirect('users');
+        sortAge ?
+            user.find({}).sort('-age').exec((err, users) => {
+                if (err) console.log(err);
+                res.render('users', {users: users});
+                sortAge = false;
+            })
+            :
+            user.find({}).sort('age').exec((err, users) => {
+                if (err) console.log(err);
+                res.render('users', {users: users});
+                sortAge = true;
+            });
     });
 
+    // search function to find an individual by name
+    app.post('/search', (req, res) => {
+        let Search = req.body.search;
+        user.find({name: Search}, (err, person) => {
+            if(err) console.log(err);
+            res.render('users', {users: person});
+        });
+    });
+
+    // from the user page, after a search, swap back to showing all users
+    app.get('/list', (req, res) => {
+        user.find({}, (err, people) => {
+            if(err) console.log(err);
+            res.render('users', {users: people});
+        });
+    });
 
     //port for server
     app.listen(3000, () => {
