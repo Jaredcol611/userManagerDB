@@ -9,7 +9,9 @@ html
                 th
                     a(href=`/sortId`) User Id
                 th
-                    a(href=`/sortName`) Name
+                    a(href=`/sortFirstName`) First Name
+                th
+                    a(href='/sortLastName') Last Name
                 th
                     a(href=`/sortEmail`) Email
                 th
@@ -18,7 +20,8 @@ html
                  tr
                      //td #{user._id}
                      td #{user.userId}
-                     td #{user.name}
+                     td #{user.firstName}
+                     td #{user.lastName}
                      td #{user.email}
                      td #{user.age}
                      td
@@ -30,7 +33,7 @@ html
             button Add New User
 
         form(action='/search', method='post')
-            input(type='text', name="search", placeholder='Search by Name')
+            input(type='text', name="search", placeholder='Search by First Name')
             button Search
 
         form(action='/list', method='get')

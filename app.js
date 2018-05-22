@@ -13,7 +13,8 @@ app.set('views',  path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 let sortId = true;
-let sortName = true;
+let sortFirstName = true;
+let sortLastName = true;
 let sortEmail = true;
 let sortAge = true;
 
@@ -28,7 +29,8 @@ db.once('open', function() {
     // Schema
     const mySchema = mongoose.Schema({
         userId: String,
-        name: String,
+        firstName: String,
+        lastName: String,
         email: String,
         age: Number
     });
@@ -53,7 +55,8 @@ db.once('open', function() {
     app.post('/users', (req, res) => {
         let person = new user({
             userId: req.body.userId,
-            name: req.body.name,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
             email: req.body.email,
             age: req.body.age
         });
@@ -93,7 +96,8 @@ db.once('open', function() {
             {$set:
                     {
                         userId: req.body.userId,
-                        name: req.body.name,
+                        firstName: req.body.firstName,
+                        lastName: req.body.lastName,
                         email: req.body.email,
                         age: req.body.age,
                     }
@@ -129,19 +133,34 @@ db.once('open', function() {
                 sortId = true;
             });
     });
-    //Sort Name
-    app.get('/sortName', (req, res) => {
-        sortName ?
-            user.find({}).sort('-name').exec((err, users) => {
+    //Sort First Name
+    app.get('/sortFirstName', (req, res) => {
+        sortFirstName ?
+            user.find({}).sort('-firstName').exec((err, users) => {
                 if (err) console.log(err);
                 res.render('users', {users: users});
-                sortName = false;
+                sortFirstName = false;
             })
             :
-            user.find({}).sort('name').exec((err, users) => {
+            user.find({}).sort('firstName').exec((err, users) => {
                 if (err) console.log(err);
                 res.render('users', {users: users});
-                sortName = true;
+                sortFirstName = true;
+            });
+    });
+    //Sort Last Name
+    app.get('/sortLastName', (req, res) => {
+        sortLastName ?
+            user.find({}).sort('-lastName').exec((err, users) => {
+                if (err) console.log(err);
+                res.render('users', {users: users});
+                sortLastName = false;
+            })
+            :
+            user.find({}).sort('lastName').exec((err, users) => {
+                if (err) console.log(err);
+                res.render('users', {users: users});
+                sortLastName = true;
             });
     });
     //Sort Email
@@ -179,7 +198,7 @@ db.once('open', function() {
     // search function to find an individual by name
     app.post('/search', (req, res) => {
         let Search = req.body.search;
-        user.find({name: Search}, (err, person) => {
+        user.find({firstName: Search}, (err, person) => {
             if(err) console.log(err);
             res.render('users', {users: person});
         });
