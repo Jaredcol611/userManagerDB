@@ -3,12 +3,9 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
-// const url = 'mongodb://localhost:27017';
-// const dbName = 'testProject';
 const app = express();
-// let userArr = [];
 
-// use and set code
+// use, set and global booleans for sorting
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -27,8 +24,8 @@ mongoose.connect('mongodb://localhost/test');
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
-    // we're connected!
-    //Schema
+    // Connected!
+    // Schema
     const mySchema = mongoose.Schema({
         userId: String,
         name: String,
@@ -40,7 +37,6 @@ db.once('open', function() {
 
     // get root page, render index which now displays the users table
     app.get('/', (req, res) => {
-
         user.find({}, (err, people) => {
             if (err) return console.log(err);
             res.render('users', {users: people});
@@ -117,7 +113,6 @@ db.once('open', function() {
         });
     });
 
-
     //all sort /get requests below
     //Sort Id
     app.get('/sortId', (req, res) => {
@@ -179,6 +174,7 @@ db.once('open', function() {
                 sortAge = true;
             });
     });
+
 
     // search function to find an individual by name
     app.post('/search', (req, res) => {
